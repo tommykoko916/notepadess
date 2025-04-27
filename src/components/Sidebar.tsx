@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -29,10 +29,10 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(true);
   const isMobile = useIsMobile();
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-close sidebar on mobile
-  React.useEffect(() => {
+  useEffect(() => {
     if (isMobile) {
       setIsOpen(false);
     } else {
@@ -157,3 +157,4 @@ const Sidebar: React.FC<SidebarProps> = ({
 };
 
 export default Sidebar;
+

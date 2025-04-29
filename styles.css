@@ -1,4 +1,3 @@
-
 :root {
   /* Light theme colors */
   --background: #ffffff;
@@ -575,6 +574,10 @@ body {
 /* Theme toggle styles */
 .theme-toggle {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .sun-icon {
@@ -588,11 +591,11 @@ body {
   transition: opacity 0.2s;
 }
 
-.dark .sun-icon {
+body.dark .sun-icon {
   opacity: 0;
 }
 
-.dark .moon-icon {
+body.dark .moon-icon {
   opacity: 1;
 }
 

@@ -1,4 +1,3 @@
-
 // Type definitions (for reference only, not needed in vanilla JS)
 /**
  * @typedef {Object} HistoryEntry
@@ -809,6 +808,9 @@ function closeSidebar() {
 function toggleTheme() {
   const isDark = document.body.classList.toggle('dark');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  
+  // For debugging
+  console.log('Theme toggled. Dark mode:', isDark);
 }
 
 // Check and set theme from localStorage

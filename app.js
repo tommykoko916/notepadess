@@ -63,6 +63,7 @@ let currentAutocompleteIndex = -1;
 
 // Initialize the application
 function init() {
+  console.log('Initializing app...');
   loadNotes();
   setupEventListeners();
   checkTheme();
@@ -83,6 +84,8 @@ function init() {
   
   // Check for mobile view
   handleResize();
+  
+  console.log('App initialized successfully');
 }
 
 // Load notes from localStorage
@@ -90,7 +93,10 @@ function loadNotes() {
   const savedNotes = localStorage.getItem('notes');
   notes = savedNotes ? JSON.parse(savedNotes) : [];
   isAutocompleteEnabled = localStorage.getItem('autocompleteEnabled') !== 'false';
-  autocompleteToggle.checked = isAutocompleteEnabled;
+  
+  if (autocompleteToggle) {
+    autocompleteToggle.checked = isAutocompleteEnabled;
+  }
   
   // Build initial word set for autocomplete from existing notes
   notes.forEach(note => {
@@ -106,48 +112,118 @@ function saveNotes() {
 
 // Set up event listeners
 function setupEventListeners() {
+  console.log('Setting up event listeners...');
+  
   // Mobile sidebar toggle
-  sidebarToggle.addEventListener('click', toggleSidebar);
-  sidebarOverlay.addEventListener('click', closeSidebar);
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    console.log('Added sidebar toggle listener');
+  }
+  
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', closeSidebar);
+    console.log('Added sidebar overlay listener');
+  }
   
   // Note actions
-  newNoteBtn.addEventListener('click', createNewNote);
-  emptyStateNewBtn.addEventListener('click', createNewNote);
-  noteTitle.addEventListener('input', updateActiveNoteTitle);
-  noteContent.addEventListener('input', handleNoteContentChange);
+  if (newNoteBtn) {
+    newNoteBtn.addEventListener('click', createNewNote);
+    console.log('Added new note button listener');
+  }
+  
+  if (emptyStateNewBtn) {
+    emptyStateNewBtn.addEventListener('click', createNewNote);
+    console.log('Added empty state new button listener');
+  }
+  
+  if (noteTitle) {
+    noteTitle.addEventListener('input', updateActiveNoteTitle);
+    console.log('Added note title input listener');
+  }
+  
+  if (noteContent) {
+    noteContent.addEventListener('input', handleNoteContentChange);
+    console.log('Added note content input listener');
+  }
   
   // Autocomplete
-  autocompleteToggle.addEventListener('change', toggleAutocomplete);
-  noteContent.addEventListener('keydown', handleKeyDown);
+  if (autocompleteToggle) {
+    autocompleteToggle.addEventListener('change', toggleAutocomplete);
+    console.log('Added autocomplete toggle listener');
+  }
+  
+  if (noteContent) {
+    noteContent.addEventListener('keydown', handleKeyDown);
+    console.log('Added note content keydown listener');
+  }
+  
   document.addEventListener('click', (e) => {
-    if (!autoCompleteContainer.contains(e.target)) {
+    if (autoCompleteContainer && !autoCompleteContainer.contains(e.target)) {
       hideAutocomplete();
     }
   });
   
   // Note controls
-  downloadNoteBtn.addEventListener('click', downloadActiveNote);
-  historyBtn.addEventListener('click', toggleHistoryPanel);
-  closeHistoryBtn.addEventListener('click', toggleHistoryPanel);
+  if (downloadNoteBtn) {
+    downloadNoteBtn.addEventListener('click', downloadActiveNote);
+    console.log('Added download note button listener');
+  }
+  
+  if (historyBtn) {
+    historyBtn.addEventListener('click', toggleHistoryPanel);
+    console.log('Added history button listener');
+  }
+  
+  if (closeHistoryBtn) {
+    closeHistoryBtn.addEventListener('click', toggleHistoryPanel);
+    console.log('Added close history button listener');
+  }
   
   // Import/Export
-  exportAllBtn.addEventListener('click', exportAllNotes);
-  importBtn.addEventListener('click', () => importFileInput.click());
-  importFileInput.addEventListener('change', importNotes);
+  if (exportAllBtn) {
+    exportAllBtn.addEventListener('click', exportAllNotes);
+    console.log('Added export all button listener');
+  }
+  
+  if (importBtn) {
+    importBtn.addEventListener('click', () => {
+      if (importFileInput) {
+        importFileInput.click();
+      }
+    });
+    console.log('Added import button listener');
+  }
+  
+  if (importFileInput) {
+    importFileInput.addEventListener('change', importNotes);
+    console.log('Added import file input listener');
+  }
   
   // Theme
-  themeToggle.addEventListener('click', toggleTheme);
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+    console.log('Added theme toggle listener');
+  }
   
   // Delete modal
-  confirmDeleteBtn.addEventListener('click', confirmDelete);
-  cancelDeleteBtn.addEventListener('click', cancelDelete);
+  if (confirmDeleteBtn) {
+    confirmDeleteBtn.addEventListener('click', confirmDelete);
+    console.log('Added confirm delete button listener');
+  }
+  
+  if (cancelDeleteBtn) {
+    cancelDeleteBtn.addEventListener('click', cancelDelete);
+    console.log('Added cancel delete button listener');
+  }
   
   // Responsive design
   window.addEventListener('resize', handleResize);
+  console.log('Added window resize listener');
 }
 
 // Create a new note
 function createNewNote() {
+  console.log('Creating new note...');
   const newNote = {
     id: Date.now().toString(),
     title: 'Untitled Note',
@@ -164,7 +240,9 @@ function createNewNote() {
   showToast('New note created', 'success');
   
   // Focus title for editing
-  noteTitle.focus();
+  if (noteTitle) {
+    noteTitle.focus();
+  }
   
   // Close sidebar on mobile after creating note
   if (window.innerWidth <= 768) {
@@ -181,11 +259,11 @@ function setActiveNoteId(id) {
   
   // Show editor or empty state
   if (id) {
-    editorContainer.style.display = 'flex';
-    emptyState.style.display = 'none';
+    if (editorContainer) editorContainer.style.display = 'flex';
+    if (emptyState) emptyState.style.display = 'none';
   } else {
-    editorContainer.style.display = 'none';
-    emptyState.style.display = 'flex';
+    if (editorContainer) editorContainer.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'flex';
   }
 }
 
@@ -196,8 +274,8 @@ function renderActiveNote() {
   const note = notes.find(note => note.id === activeNoteId);
   if (!note) return;
   
-  noteTitle.value = note.title;
-  noteContent.value = note.content;
+  if (noteTitle) noteTitle.value = note.title;
+  if (noteContent) noteContent.value = note.content;
   updateNoteStats();
 }
 
@@ -242,7 +320,7 @@ function handleNoteContentChange() {
 
 // Update note content and history
 function updateNoteContent() {
-  if (!activeNoteId) return;
+  if (!activeNoteId || !noteContent) return;
   
   const content = noteContent.value;
   const noteIndex = notes.findIndex(note => note.id === activeNoteId);
@@ -282,6 +360,8 @@ function updateNoteContent() {
 
 // Calculate and update note stats
 function updateNoteStats() {
+  if (!noteContent || !wordCount || !charCount || !readingTime) return;
+  
   const content = noteContent.value;
   
   // Calculate word count (excluding blank spaces)
@@ -303,6 +383,8 @@ function updateNoteStats() {
 
 // Render the notes list in sidebar
 function renderNotesList() {
+  if (!notesList) return;
+  
   notesList.innerHTML = '';
   
   if (notes.length === 0) {
@@ -362,10 +444,12 @@ function renderNotesList() {
     
     // Add click event to delete button
     const deleteBtn = noteItem.querySelector('.delete-note-btn');
-    deleteBtn.addEventListener('click', (event) => {
-      event.stopPropagation();
-      showDeleteModal(note.id);
-    });
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        showDeleteModal(note.id);
+      });
+    }
   });
 }
 
@@ -794,43 +878,50 @@ function hideAutocomplete() {
 
 // Toggle sidebar (for mobile)
 function toggleSidebar() {
-  sidebar.classList.toggle('open');
-  sidebarOverlay.classList.toggle('active');
+  console.log('Toggling sidebar');
+  if (sidebar) sidebar.classList.toggle('open');
+  if (sidebarOverlay) sidebarOverlay.classList.toggle('active');
 }
 
 // Close sidebar (for mobile)
 function closeSidebar() {
-  sidebar.classList.remove('open');
-  sidebarOverlay.classList.remove('active');
+  if (sidebar) sidebar.classList.remove('open');
+  if (sidebarOverlay) sidebarOverlay.classList.remove('active');
 }
 
 // Toggle between light and dark themes
 function toggleTheme() {
+  console.log('Toggling theme...');
   const isDark = document.body.classList.toggle('dark');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
   
-  // For debugging
   console.log('Theme toggled. Dark mode:', isDark);
 }
 
 // Check and set theme from localStorage
 function checkTheme() {
+  console.log('Checking theme...');
   const savedTheme = localStorage.getItem('theme');
   
   if (savedTheme === 'dark') {
     document.body.classList.add('dark');
+    console.log('Applied dark theme from localStorage');
   } else if (savedTheme === 'light') {
     document.body.classList.remove('dark');
+    console.log('Applied light theme from localStorage');
   } else {
     // Check system preference
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       document.body.classList.add('dark');
+      console.log('Applied dark theme from system preference');
     }
   }
 }
 
 // Show toast notification
 function showToast(message, type = 'success') {
+  if (!toastContainer) return;
+  
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
   toast.textContent = message;
@@ -852,14 +943,17 @@ function showToast(message, type = 'success') {
 // Handle window resize
 function handleResize() {
   if (window.innerWidth <= 768) {
-    sidebar.classList.remove('open');
-    sidebarOverlay.classList.remove('active');
-    sidebarToggle.style.display = 'flex';
+    if (sidebar) sidebar.classList.remove('open');
+    if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    if (sidebarToggle) sidebarToggle.style.display = 'flex';
   } else {
-    sidebar.classList.add('open');
-    sidebarToggle.style.display = 'none';
+    if (sidebar) sidebar.classList.add('open');
+    if (sidebarToggle) sidebarToggle.style.display = 'none';
   }
 }
 
 // Initialize the app when DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded, initializing app...');
+  init();
+});

@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 
 const ThemeToggle: React.FC = () => {
-  // Use OS preference as default if no localStorage value exists
-  const defaultTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-
   const [theme, setTheme] = useState<"light" | "dark">(() => {
+    // For server-side rendering
+    if (typeof window === "undefined") return "light";
+    
+    // Use OS preference as default if no localStorage value exists
+    const defaultTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+      
     const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
     return storedTheme || defaultTheme;
   });
@@ -24,9 +27,11 @@ const ThemeToggle: React.FC = () => {
     }
 
     localStorage.setItem("theme", theme);
+    console.log("Theme set to:", theme); // Debug log
   }, [theme]);
 
   const toggleTheme = () => {
+    console.log("Toggle theme clicked"); // Debug log
     setTheme(theme === "light" ? "dark" : "light");
   };
 
